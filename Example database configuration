@@ -1,0 +1,28 @@
+In this example password always equals username.
+Run this commands in psql:
+----------------------------------------------------------------------
+
+CREATE DATABASE hwmonitor;
+\c hwmonitor;
+
+CREATE TABLE users(
+   username varchar(20) NOT NULL,
+   password varchar(60) NOT NULL,
+   enabled boolean NOT NULL DEFAULT FALSE,
+   primary key(username)
+);
+
+create table user_roles (
+  user_role_id SERIAL PRIMARY KEY,
+  username varchar(20) NOT NULL,
+  role varchar(20) NOT NULL,
+  UNIQUE (username,role),
+  FOREIGN KEY (username) REFERENCES users (username)
+);
+
+INSERT INTO users(username,password,enabled) VALUES ('jack','$2a$10$bd4Qn3nFAGmg3hdohmyZfuj9.ibNEkfFQlqdDlPMwA0ZCkbg7Arr.', true);
+INSERT INTO users(username,password,enabled) VALUES ('peter','$2a$10$H6I9wy8Tvv9DbA14IiEQ9eBLU/QFDhqYGG9FUXlGGdRCSgtOCjAqS', true);
+ 
+INSERT INTO user_roles (username, role) VALUES ('jack', 'ROLE_USER');
+INSERT INTO user_roles (username, role) VALUES ('jack', 'ROLE_COMPANY123');
+INSERT INTO user_roles (username, role) VALUES ('peter', 'ROLE_ADMIN');
