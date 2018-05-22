@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <head>
+        <title>Login page</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
+	</head>
+    <body>
+    <div th:fragment="logout" class="logout" sec:authorize="!isAuthenticated()">
+        <h1>Login page</h1>
+        <p>Example user: user / password</p>
+        <p th:if="${loginError}" class="error">Wrong user or password</p>
+        <form th:action="@{/login}" method="post">
+            <label for="username">Username</label>:
+            <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
+            <label for="password">Password</label>:
+            <input type="password" id="password" name="password" /> <br />
+            <input type="submit" value="Log in" />
+        </form>
+        <p><a href="/index" th:href="@{/index}">Back to home page</a></p>
+        </div>
+    <div th:fragment="logout" class="alreadyLoggedIn" sec:authorize="isAuthenticated()">
+        <h1>You are already logged in as: <td th:text="${username}">Text...</td></h1>
+        <p><a href="/index" th:href="@{/index}">Back to home page</a></p>
+    </div>
+    </body>
+</html>
