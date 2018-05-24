@@ -1,7 +1,7 @@
 In this example password always equals username.
 Run this commands in psql:
 ----------------------------------------------------------------------
-
+DROP DATABASE hwmonitor;
 CREATE DATABASE hwmonitor;
 \c hwmonitor;
 
@@ -10,6 +10,34 @@ CREATE TABLE users(
    password varchar(60) NOT NULL,
    enabled boolean NOT NULL DEFAULT FALSE,
    primary key(username)
+);
+
+CREATE TABLE companies(
+   company_id SERIAL PRIMARY KEY,
+   company_name varchar(20) NOT NULL,
+   company_role varchar(20) NOT NULL
+);
+
+CREATE TABLE feeders(
+   feeder_id SERIAL PRIMARY KEY,
+   company_id integer NOT NULL,
+   feeder_desc varchar(64) NOT NULL,
+   FOREIGN KEY (company_id) REFERENCES companies (company_id)
+);
+
+CREATE TABLE feeders(
+   feeder_id SERIAL PRIMARY KEY,
+   company_id integer NOT NULL,
+   feeder_desc varchar(64) NOT NULL,
+   FOREIGN KEY (company_id) REFERENCES companies (company_id)
+);
+
+CREATE TABLE measurements(
+   id SERIAL PRIMARY KEY,
+   feeder_id integer NOT NULL,
+   value integer NOT NULL,
+   time timestamp NOT NULL,
+   FOREIGN KEY (feeder_id) REFERENCES feeders (feeder_id)
 );
 
 create table user_roles (
@@ -22,7 +50,19 @@ create table user_roles (
 
 INSERT INTO users(username,password,enabled) VALUES ('jack','$2a$10$bd4Qn3nFAGmg3hdohmyZfuj9.ibNEkfFQlqdDlPMwA0ZCkbg7Arr.', true);
 INSERT INTO users(username,password,enabled) VALUES ('peter','$2a$10$H6I9wy8Tvv9DbA14IiEQ9eBLU/QFDhqYGG9FUXlGGdRCSgtOCjAqS', true);
- 
+
+
 INSERT INTO user_roles (username, role) VALUES ('jack', 'ROLE_USER');
 INSERT INTO user_roles (username, role) VALUES ('jack', 'ROLE_COMPANY123');
 INSERT INTO user_roles (username, role) VALUES ('peter', 'ROLE_ADMIN');
+
+INSERT INTO companies (company_id, company_name, company_role) VALUES (1, 'PIERWSZA', 'ROLE_PIERWSZA');
+INSERT INTO companies (company_id, company_name, company_role) VALUES (2, 'DRUGA', 'ROLE_DRUGA');
+
+INSERT INTO feeders (feeder_id, company_id, feeder_desc) VALUES (1, 2, 'pierwszy feeder firmy DRUGA');
+INSERT INTO feeders (feeder_id, company_id, feeder_desc) VALUES (2, 1, 'pierwszy feeder firmy PIERWSZA');
+INSERT INTO feeders (feeder_id, company_id, feeder_desc) VALUES (3, 2, 'drugi feeder firmy DRUGA');
+INSERT INTO feeders (feeder_id, company_id, feeder_desc) VALUES (4, 1, 'drugi feeder firmy PIERWSZA');
+
+INSERT INTO measurements (id,feeder_id,value,time) VALUES(1,3,1234,NOW());
+INSERT INTO measurements (id,feeder_id,value,time) VALUES(2,1,5678,NOW());

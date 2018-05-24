@@ -1,4 +1,4 @@
-package edu.pw.hwmonitor;
+package edu.pw.hwmonitor.security;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -7,17 +7,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+
 public class SecurityManager {
 
-    boolean isAnonymous() {
+    public boolean isAnonymous() {
         return getUsername().equals("anonymousUser");
     }
 
-    String getUsername() {
+    public String getUsername() {
         return org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-    ArrayList<String> getRoles() {
+    public ArrayList<String> getRoles() {
         Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         ArrayList<String> roles = new ArrayList<>();
         Iterator it = authorities.iterator();
@@ -25,7 +26,7 @@ public class SecurityManager {
         return roles;
     }
 
-    String getRolesAsString()
+    public String getRolesAsString()
     {
         String res="";
         ArrayList<String> roles = getRoles();
@@ -34,7 +35,7 @@ public class SecurityManager {
         return res;
     }
 
-    boolean hasRole(String role) {
+    public boolean hasRole(String role) {
         ArrayList<String> roles = getRoles();
         return roles.contains(role);
     }
