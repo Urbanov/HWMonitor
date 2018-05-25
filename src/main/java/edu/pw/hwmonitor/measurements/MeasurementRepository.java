@@ -18,4 +18,6 @@ public interface MeasurementRepository extends Repository<Measurement, Long> {
     Optional<Measurement> findFirstById(Long id);
 
     List<Measurement> findAllByFeederIdEqualsAndTimeIsGreaterThanEqualAndTimeIsLessThan(Long feederId, LocalDateTime timel,LocalDateTime timeh);
+
+    List<Measurement> findAllByFeederIdEquals(Long feederId);
 }

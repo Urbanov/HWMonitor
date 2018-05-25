@@ -8,8 +8,9 @@ import javax.persistence.*;
 public class Feeder {
 
     @Id
+    @Column(name = "FEEDER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long feeder_id;
+    private Long id;
 
     @Column(name = "SERIAL")
     private Integer serial;
@@ -24,7 +25,7 @@ public class Feeder {
     @Column(name = "SECRET", length = 64)
     private String secret;
 
-    public Long getId() { return feeder_id; }
+    public Long getId() { return id; }
 
     public Long getCompanyId() {
         return companyId;
