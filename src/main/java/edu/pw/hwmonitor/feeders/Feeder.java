@@ -11,30 +11,48 @@ public class Feeder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feeder_id;
 
+    @Column(name = "SERIAL")
+    private Integer serial;
+
     @Column(name = "COMPANY_ID")
-    private Long company_id;
+    private Long companyId;
 
 
     @Column(name = "FEEDER_DESC", length = 64)
-    private String feeder_desc;
+    private String desc;
 
-    public Long getId() {
-        return feeder_id;
+    @Column(name = "SECRET", length = 64)
+    private String secret;
+
+    public Long getId() { return feeder_id; }
+
+    public Long getCompanyId() {
+        return companyId;
     }
 
-    public Long getCompany_id() {
-        return company_id;
+    public void setCompanyId(Long company_id) {
+        this.companyId = company_id;
     }
 
-    public void setCompany_id(Long company_id) {
-        this.company_id = company_id;
+    public Integer getSerial() {
+        return serial;
     }
 
-    public String getFeeder_desc() {
-        return feeder_desc;
+    public void setSerial(Integer v) {
+        this.serial = v;
     }
 
-    public void setFeeder_desc(String v) {
-        this.feeder_desc = v;
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String v) {
+        this.desc = v;
+    }
+
+    public String getSecret() { return secret; }
+
+    public void setSecret(String v) {
+        this.secret = v;
     }
 }

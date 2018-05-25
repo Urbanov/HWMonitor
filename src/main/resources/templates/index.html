@@ -1,28 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-    <head>
-        <title>Hello Spring Security</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
-    </head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout.html" th:with="activeTab='home'" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Main page</title>
+</head>
+<body>
+<div layout:fragment="content" style="width: 40%;align: center;" >
+    <div th:replace="fragments/alert :: alert"></div>
 
-    <body>
 
-        <div th:fragment="logout" class="logout" sec:authorize="isAuthenticated()">
-            Logged in user: <span sec:authentication="name"></span> |
-            Roles: <span sec:authentication="principal.authorities"></span>
-            <div>
-                <form action="#" th:action="@{/logout}" method="post">
-                    <input type="submit" value="Logout" />
-                </form>
-            </div>
-        </div>
-        <h1>Index page visible for everyone, even anonymous users</h1>
-        <p><td th:text="${msg2}">Text...</td></body></p>
-        <p><td th:text="${msg}">Text...</td></body></p>
-        <p>You can access secure page after login.</p>
-        <ul>
-            <li>Go to the <a href="/user/index" th:href="@{/user/index}">secured page</a></li>
-        </ul>
-    </body>
+    <h1>Index page visible for everyone, even anonymous users</h1>
+    <p><td th:text="${msg2}">Text...</td></p>
+    <p><td th:text="${msg}">Text...</td></p>
+    <p>You can access secure page after login.</p>
+    <ul>
+    <li>Go to the <a href="/user/index" th:href="@{/user/index}">secured page</a></li>
+    </ul>
+</div>
+
+
+</body>
 </html>

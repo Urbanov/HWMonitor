@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Hello Spring Security</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
-    </head>
-    <body>
-        <div th:substituteby="index::logout"></div>
-        <h1>This is a secured page!</h1>
-        <p><a href="/index" th:href="@{/index}">Back to home page</a></p>
-    </body>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout.html" th:with="activeTab='secure'" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Main page</title>
+</head>
+<body>
+<div layout:fragment="content" style="width: 40%;align: center;" >
+    <div th:replace="fragments/alert :: alert"></div>
+    <h1>This is a secured page!</h1>
+    <p><a href="/index" th:href="@{/index}">Back to home page</a></p>
+</div>
+
+
+</body>
 </html>
