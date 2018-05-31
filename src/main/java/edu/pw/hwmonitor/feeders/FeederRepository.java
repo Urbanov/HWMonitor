@@ -15,4 +15,5 @@ public interface FeederRepository extends Repository<Feeder, Long> {
 
     List<Feeder> findAllByCompanyIdEquals(Long companyId);
     Optional<Feeder> findTopByIdEquals(Long Id);
+    Optional<Feeder> findTopBySerialEquals(Integer serial);
 }

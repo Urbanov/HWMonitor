@@ -9,9 +9,9 @@ import edu.pw.hwmonitor.measurements.Measurement;
 import edu.pw.hwmonitor.measurements.MeasurementRepository;
 import edu.pw.hwmonitor.security.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,80 +35,78 @@ public class RequestController {
     private MeasurementRepository measurementRepository;
 
 
-    @GetMapping("/allowedCompanies")
-    public List<ImmutableMap<String, String>> getAllowedCompanies() {
+    @GetMapping("/user/feederMetadata")
+    public List<ImmutableMap<String, String>> getfeederMetadata() {
         List<Company> companies = companyAuthorizations();
         if(companies.size()==0) return new ArrayList<ImmutableMap<String, String>>(){};
+        List<Feeder> feeders;
+        List<ImmutableMap<String, String>> result = new ArrayList<>();
+        for (Company c : companies) {
+            result.add(ImmutableMap.of(
+                    "x", "1",
+                    "serial", c.getId().toString(),
+                    "company_id",c.getName(),
+                    "desc", c.getRole()
+                    ));
 
-        Iterator<Company> it = companies.iterator();
-        return Stream.iterate(it.next(),c -> it.next())
-                .limit(companies.size())
-                .map(c -> ImmutableMap.of(
-                        "id", c.getId().toString(),
-                        "name",c.getName(),
-                        "role", c.getRole()
-                ))
-                .collect(Collectors.toList());
+            feeders = feederRepository.findAllByCompanyIdEquals(c.getId());
+            for(Feeder f : feeders) {
+                result.add(ImmutableMap.of(
+                        "x", "0",
+                        "serial", f.getSerial().toString(),
+                        "company_id",f.getCompanyId().toString(),
+                        "desc", f.getDesc()));
+            }
+        }
+        return result;
     }
 
-    @GetMapping("/allowedFeeders")
-    public List<ImmutableMap<String, String>> getAllowedFeeders() {
-        List<Feeder> feeders = allowedFeeders();
-        if(feeders.size()==0) return new ArrayList<ImmutableMap<String, String>>(){};
-        Iterator<Feeder> it = feeders.iterator();
-        return Stream.iterate(it.next(), feeder -> it.next())
-                .limit(feeders.size())
-                .map(feeder -> ImmutableMap.of(
-                        "id", feeder.getId().toString(),
-                        "serial", feeder.getSerial().toString(),
-                        "company_id",feeder.getCompanyId().toString(),
-                        "desc", feeder.getDesc()
-                ))
-                .collect(Collectors.toList());
+    @PostMapping("/user/feederMeasurements")
+    public ResponseEntity<List<ImmutableMap<String, String>>> feederMeasurements(@RequestBody DataRequest dataRequest) {
+        if(!isFeederAllowed(dataRequest.getSerial())) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        Optional<Feeder> feederOptional = feederRepository.findTopBySerialEquals(dataRequest.getSerial());
+        if(feederOptional.isPresent()) {
+            Feeder feeder = feederOptional.get();
+
+            List<Measurement> measurements = measurementRepository.
+                    findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeDesc(feeder.getId(), dataRequest.getTimel(), dataRequest.getTimeh());
+
+            if(measurements.size()==0) return new ResponseEntity<>(HttpStatus.OK);
+            Iterator<Measurement> it = measurements.iterator();
+            return new ResponseEntity<>(Stream.iterate(it.next(), measurement -> it.next())
+                    .limit(measurements.size())
+                    .map(measurement -> ImmutableMap.of(
+                            "feederSerial", feederRepository.findTopByIdEquals(measurement.getFeederId()).get().getSerial().toString(),
+                            "time", measurement.getTime().toString(),
+                            "value", measurement.getValue().toString()
+                    ))
+                    .collect(Collectors.toList()),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/measurements")
-    public List<ImmutableMap<String, String>> getMeasurements() {
-        List<Measurement> measurements = measurementsFromAllowedFeeders();
-        if(measurements.size()==0) return new ArrayList<ImmutableMap<String, String>>(){};
-        Iterator<Measurement> it = measurements.iterator();
-        return Stream.iterate(it.next(), measurement -> it.next())
-                .limit(measurements.size())
-                .map(measurement -> ImmutableMap.of(
-                        "feederSerial", feederRepository.findTopByIdEquals(measurement.getFeederId()).get().getSerial().toString(),
-                        "time", measurement.getTime().toString(),
-                        "value", measurement.getValue().toString()
-                ))
-                .collect(Collectors.toList());
-    }
 
     private List<Company> companyAuthorizations() {
         List<Company> companies = new ArrayList<>();
         List<String> roles = securityManager.getRoles();
-        Iterator<String> it = roles.iterator();
         Optional<Company> c;
-        for (int i=0;i<roles.size();i++) {
-            c = companyRepository.findTopByRoleEquals(it.next());
+        for (String role : roles) {
+            c = companyRepository.findTopByRoleEquals(role);
             if(c.isPresent()) companies.add(c.get());
         }
         return companies;
     }
 
-    private List<Feeder> allowedFeeders() {
-        List<Feeder> feeders = new ArrayList<>();
+    private boolean isFeederAllowed(int serial) {
+        List<Integer> serials = new ArrayList<>();
         List<Company> companies = companyAuthorizations();
-        Iterator<Company> itc= companies.iterator();
-        for (int i=0;i<companies.size();i++)
-            feeders.addAll(feederRepository.findAllByCompanyIdEquals(itc.next().getId()));
-        return feeders;
-    }
-
-    private List<Measurement> measurementsFromAllowedFeeders() {
-        List<Feeder> feeders = allowedFeeders();
-        Iterator<Feeder> it = feeders.iterator();
-        List<Measurement> m = new ArrayList<>();
-        for (int i=0;i<feeders.size();i++)
-            m.addAll(measurementRepository.findAllByFeederIdEquals(it.next().getId()));
-        return m;
+        List<Feeder> feeders;
+        for (Company c : companies){
+            feeders=feederRepository.findAllByCompanyIdEquals(c.getId());
+            for(Feeder f : feeders)
+                serials.add(f.getSerial());
+        }
+        return serials.contains(serial);
     }
 }

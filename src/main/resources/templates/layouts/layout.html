@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title layout:title-pattern="$DECORATOR_TITLE | $CONTENT_TITLE">ParkIN</title>
+    <title layout:title-pattern="$DECORATOR_TITLE | $CONTENT_TITLE">HWMonitor</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
@@ -19,7 +19,7 @@
             <a>
                 <img th:src="@{/images/logo_navbar.png}" width="36" height="36" alt=""/>
             </a>
-            <a class="navbar-brand ml-2" href="#">ParkIN</a>
+            <a class="navbar-brand ml-2" href="#">HWMonitor</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -31,15 +31,11 @@
                     </li>
 
                     <li class="nav-item mx-1" th:classappend="${activeTab == 'secure'}? 'active' : null"  sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/user/index}"><span class="fa fa-chart-bar"></span> Secure</a>
+                        <a class="nav-link" th:href="@{/user/index}"><span class="fa fa-chart-bar"></span> Data</a>
                     </li>
 
                     <li class="nav-item mx-1" th:classappend="${activeTab == 'stats'}? 'active' : null"  sec:authorize="isAuthenticated()">
                         <span class="input-group-text">Logged in user:  <span sec:authentication="name"></span></span>
-                    </li>
-
-                    <li class="nav-item mx-1" th:classappend="${activeTab == 'stats'}? 'active' : null"  sec:authorize="isAuthenticated()">
-                        <span class="input-group-text"> Roles: <span sec:authentication="principal.authorities"></span>
                     </li>
 
                     <li class="nav-item mx-1" th:classappend="${activeTab == 'stats'}? 'active' : null"  sec:authorize="isAuthenticated()">

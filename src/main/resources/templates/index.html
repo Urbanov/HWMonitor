@@ -6,14 +6,11 @@
 <body>
 <div layout:fragment="content" style="width: 40%;align: center;" >
     <div th:replace="fragments/alert :: alert"></div>
-
-
-    <h1>Index page visible for everyone, even anonymous users</h1>
-    <p><td th:text="${msg2}">Text...</td></p>
-    <p><td th:text="${msg}">Text...</td></p>
-    <p>You can access secure page after login.</p>
+    <h1>HWMonitor</h1>
+    <h1>monitor your hardware in real time</h1>
+    <p>You can access your data after login.</p>
     <ul>
-    <li>Go to the <a href="/user/index" th:href="@{/user/index}">secured page</a></li>
+    <li>Go to <a href="/user/index" th:href="@{/user/index}">data</a></li>
     </ul>
 </div>
 

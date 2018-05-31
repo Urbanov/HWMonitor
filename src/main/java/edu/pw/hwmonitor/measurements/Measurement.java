@@ -1,8 +1,6 @@
 package edu.pw.hwmonitor.measurements;
 
-
 import edu.pw.hwmonitor.LocalDateTimeConverter;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,8 +22,6 @@ public class Measurement {
     @Column(name = "TIME")
     private LocalDateTime time;
 
-
-
     public Long getId() {
         return id;
     }
@@ -46,7 +42,6 @@ public class Measurement {
         this.value = v;
     }
 
-
     public LocalDateTime getTime() {
         return time;
     }
@@ -58,6 +53,4 @@ public class Measurement {
     public void setTime(String v) {
         this.time = LocalDateTime.parse(v, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
-
-
 }

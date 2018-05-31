@@ -3,6 +3,7 @@ package edu.pw.hwmonitor.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,19 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginPage("/login").failureUrl("/login-error")
                 .and()
                 .exceptionHandling().accessDeniedPage("/accessDenied");
+        http
+                .csrf().disable();
     }
-
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
-        /* in memory authentication
-        auth
-                .inMemoryAuthentication()
-                .withUser(User.withDefaultPasswordEncoder().username("user").password("password").roles("USER"))
-                .withUser(User.withDefaultPasswordEncoder().username("a").password("b").roles("SUPER_HYPER_ADMIN"));
-        */
-
         auth.jdbcAuthentication().dataSource(dataSource)
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .usersByUsernameQuery("select username,password, enabled from users where username=?")
