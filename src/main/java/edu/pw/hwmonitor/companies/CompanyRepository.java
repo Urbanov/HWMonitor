@@ -9,8 +9,7 @@ public interface CompanyRepository extends Repository<Company, Long> {
 
     @RestResource
     Company save(Company registration);
-
     Integer count();
-
-    Optional<Company> findTopByRoleEquals(String v);
+    Optional<Company> findTopByRoleEquals(String role);
+    Optional<Company> findByNameEquals(String name);
 }

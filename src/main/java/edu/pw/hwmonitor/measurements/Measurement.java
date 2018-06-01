@@ -9,7 +9,8 @@ import java.time.format.DateTimeFormatter;
 @Table(name = "MEASUREMENTS")
 public class Measurement {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "FEEDER_ID")

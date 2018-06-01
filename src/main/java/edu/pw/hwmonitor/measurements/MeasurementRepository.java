@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface MeasurementRepository extends Repository<Measurement, Long> {
 
     @RestResource
-    Measurement save(Measurement registration);
-
+    Measurement save(Measurement measurement);
     List<Measurement> findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeDesc(Integer feederId, LocalDateTime timel,LocalDateTime timeh);
 }

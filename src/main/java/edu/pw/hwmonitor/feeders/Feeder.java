@@ -18,7 +18,6 @@ public class Feeder {
     @Column(name = "COMPANY_ID")
     private Long companyId;
 
-
     @Column(name = "FEEDER_DESC", length = 64)
     private String desc;
 
