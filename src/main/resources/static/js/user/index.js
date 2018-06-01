@@ -2,8 +2,9 @@ let chartHandler;
 
 $(document).ready(() => {
     loadData();
+    document.getElementById("time1").value = moment(moment(Date.now()).subtract(10, 'years')).format("YYYY-MM-DDTHH:MM");
+    document.getElementById("time2").value = moment(Date.now()).format("YYYY-MM-DDTHH:MM");
 });
-
 
 function loadData() {
     $.get("feederMetadata", response => {
@@ -29,6 +30,7 @@ function createCompanyButton(element, index, array){
         document.getElementById("feederButtons").appendChild(button);
         document.getElementById(index).addEventListener("click", function() {
             measurementData(this.id);
+
         }, false);
     }
 }
@@ -38,8 +40,10 @@ function measurementData(index) {
     let ct='<thead> <tr> <th>Serial</th> <th>Timestamp</th> <th>Value</th> </tr> </thead><tbody id = "mes"></tbody>';
     $("#measurementContent").append(ct);
 
-    var d = new Date(2000, 1, 1, 0, 0, 0, 0);
-    var d2 = new Date(2020, 3, 25, 0, 0, 0, 0);
+
+    let d = moment(document.getElementById("time1").value);
+    let d2 = moment(document.getElementById("time2").value);
+
     console.log("a: "+companyId)
     $.ajax({
         type: "POST",
@@ -48,6 +52,8 @@ function measurementData(index) {
         data: JSON.stringify({ companyId: metadata[index].company_id, serial: metadata[index].serial, timel: moment(d).format("YYYY-MM-DD HH:mm:ss") , timeh: moment(d2).format("YYYY-MM-DD HH:mm:ss")}),
         success: response => {
             response.forEach(showData);
+            data=response;
+            showChart();
         }
     });
 }
@@ -55,4 +61,34 @@ function measurementData(index) {
 function showData(element, index, array) {
     let ct='<tr><td>'+element.feederSerial+'</td><td>'+moment(element.time).format("YYYY-MM-DD HH:mm:ss")+'</td><td>'+element.value+'</td></tr>';
     $("#mes").append(ct);
+}
+
+function showChart() {
+    if(chartHandler!==undefined) chartHandler.clear();
+    chartHandler = new Chart($("#chart"), {
+        type: 'line',
+        data: {
+            datasets:[{
+                data: data.map((elem) => elem.value),
+                backgroundColor: "rgba(54, 162, 235, 0.6)"
+            }],
+            labels: data.map((elem) => moment(elem.time).format("YYYY-MM-DD HH:mm:ss"))
+        },
+        options: {
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        callback: (value, index, values) => {
+                            return value;
+                        },
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
 }
