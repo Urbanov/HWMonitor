@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RestController
 public class RequestController {
     @Autowired
-    RequestController(SecurityManager securityManager, CompanyRepository companyRepository, FeederRepository feederRepository, MeasurementRepository measurementRepository) {
+    public RequestController(SecurityManager securityManager, CompanyRepository companyRepository, FeederRepository feederRepository, MeasurementRepository measurementRepository) {
         this.securityManager=securityManager;
         this.companyRepository=companyRepository;
         this.feederRepository=feederRepository;
@@ -63,9 +63,9 @@ public class RequestController {
 
     @PostMapping("/user/feederMeasurements")
     public ResponseEntity<List<ImmutableMap<String, String>>> feederMeasurements(@RequestBody DataRequest dataRequest) {
-        if(!isFeederAllowed(dataRequest.getSerial())) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if(!isFeederAllowed(dataRequest.getCompanyId())) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        Optional<Feeder> feederOptional = feederRepository.findTopBySerialEquals(dataRequest.getSerial());
+        Optional<Feeder> feederOptional = feederRepository.findTopBySerialEqualsAndCompanyIdEquals(dataRequest.getSerial(),dataRequest.getCompanyId());
         if(feederOptional.isPresent()) {
             Feeder feeder = feederOptional.get();
 
@@ -98,15 +98,12 @@ public class RequestController {
         return companies;
     }
 
-    private boolean isFeederAllowed(int serial) {
-        List<Integer> serials = new ArrayList<>();
+    private boolean isFeederAllowed(long companyId) {
+        List<Long> ids = new ArrayList<>();
         List<Company> companies = companyAuthorizations();
-        List<Feeder> feeders;
         for (Company c : companies){
-            feeders=feederRepository.findAllByCompanyIdEquals(c.getId());
-            for(Feeder f : feeders)
-                serials.add(f.getSerial());
+                ids.add(c.getId());
         }
-        return serials.contains(serial);
+        return ids.contains(companyId);
     }
 }

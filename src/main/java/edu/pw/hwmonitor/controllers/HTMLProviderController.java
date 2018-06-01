@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HTMLProviderController {
 
     @Autowired
-    HTMLProviderController(SecurityManager securityManager) {
+    public HTMLProviderController(SecurityManager securityManager) {
         this.securityManager=securityManager;
     }
 

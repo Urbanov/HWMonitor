@@ -10,7 +10,7 @@ public class Feeder {
     @Id
     @Column(name = "FEEDER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "SERIAL")
     private Integer serial;
@@ -25,7 +25,7 @@ public class Feeder {
     @Column(name = "SECRET", length = 64)
     private String secret;
 
-    public Long getId() { return id; }
+    public Integer getId() { return id; }
 
     public Long getCompanyId() {
         return companyId;

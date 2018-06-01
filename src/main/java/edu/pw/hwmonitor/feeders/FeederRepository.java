@@ -6,7 +6,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import java.util.List;
 import java.util.Optional;
 
-public interface FeederRepository extends Repository<Feeder, Long> {
+public interface FeederRepository extends Repository<Feeder, Integer> {
 
     @RestResource
     Feeder save(Feeder registration);
@@ -14,6 +14,6 @@ public interface FeederRepository extends Repository<Feeder, Long> {
     Integer count();
 
     List<Feeder> findAllByCompanyIdEquals(Long companyId);
-    Optional<Feeder> findTopByIdEquals(Long Id);
-    Optional<Feeder> findTopBySerialEquals(Integer serial);
+    Optional<Feeder> findTopByIdEquals(Integer Id);
+    Optional<Feeder> findTopBySerialEqualsAndCompanyIdEquals(Integer serial, Long companyId);
 }

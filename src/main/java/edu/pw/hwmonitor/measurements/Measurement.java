@@ -13,7 +13,7 @@ public class Measurement {
     private Long id;
 
     @Column(name = "FEEDER_ID")
-    private Long feederId;
+    private Integer feederId;
 
     @Column(name = "VALUE")
     private Integer value;
@@ -26,11 +26,11 @@ public class Measurement {
         return id;
     }
 
-    public Long getFeederId() {
+    public Integer getFeederId() {
         return feederId;
     }
 
-    public void setFeederId(Long v) {
+    public void setFeederId(Integer v) {
         this.feederId = v;
     }
 

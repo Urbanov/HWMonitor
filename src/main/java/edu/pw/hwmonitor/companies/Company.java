@@ -21,6 +21,8 @@ public class Company {
         return company_id;
     }
 
+    public void setCompany_id(Long companyId) { this.company_id = companyId; }
+
     public String getName() {
         return name;
     }
