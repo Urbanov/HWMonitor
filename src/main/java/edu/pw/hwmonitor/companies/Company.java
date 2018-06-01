@@ -11,7 +11,7 @@ public class Company {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long company_id;
 
-    @Column(name = "COMPANY_NAME", length = 20)
+    @Column(name = "COMPANY_NAME", length = 10)
     private String name;
 
     @Column(name = "COMPANY_ROLE", length = 20)
