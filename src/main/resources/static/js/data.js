@@ -9,9 +9,8 @@ $(document).ready(() => {
 });
 
 function loadData() {
-    $.get("feederMetadata", response => {
-        response.forEach(createCompanyButton);
-        metadata=response;
+    $.get("user/feeder-metadata", response => {
+        console.log(response);
     });
 }
 
