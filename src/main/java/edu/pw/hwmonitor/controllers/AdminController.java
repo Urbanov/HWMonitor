@@ -40,7 +40,7 @@ public class AdminController {
 
         Company company = new Company();
         company.setName(companyCreateRequest.getName());
-        company.setRole("ROLE_" + companyCreateRequest.getName());
+        company.setRole("ROLE_" + companyCreateRequest.getName().toUpperCase());
         companyRepository.save(company);
 
         User user = new User();
