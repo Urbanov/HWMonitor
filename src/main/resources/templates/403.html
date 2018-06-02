@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout.html" th:with="activeTab='home'" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <title>Access error</title>
+    <title>error</title>
 </head>
 <body>
-    <div layout:fragment="content" style="width: 40%;align: center;" >
-        <div th:replace="fragments/alert :: alert"></div>
-        <div class="jumbotron jumbotron-fluid element">
-            <h1>You don't have access to that resource :(</h1>
-        </div>
+<div layout:fragment="content">
+    <div class="jumbotron jumbotron-fluid element">
+        <p class="lead">Requested page cannot be accessed (403 forbidden)</p>
     </div>
+</div>
 </body>
 </html>

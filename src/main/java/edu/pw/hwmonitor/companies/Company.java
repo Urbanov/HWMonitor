@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Company {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long company_id;
+    private Long companyId;
 
     @Column(name = "COMPANY_NAME", length = 10)
     private String name;
@@ -17,25 +17,27 @@ public class Company {
     @Column(name = "COMPANY_ROLE", length = 20)
     private String role;
 
-    public Long getId() {
-        return company_id;
+    public Long getCompanyId() {
+        return companyId;
     }
 
-    public void setCompany_id(Long companyId) { this.company_id = companyId; }
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String v) {
-        this.name = v;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRole() {
         return role;
     }
 
-    public void setRole(String v) {
-        this.role = v;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

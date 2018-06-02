@@ -1,3 +1,5 @@
+// TODO clean up
+
 let chartHandler;
 
 $(document).ready(() => {

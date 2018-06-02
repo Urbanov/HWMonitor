@@ -23,7 +23,7 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarColor01">
+            <div class="collapse navbar-collapse" companyId="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item mx-1" th:classappend="${activeTab == 'home'}? 'active' : null">
                         <a class="nav-link" th:href="@{/}"><span class="fa fa-home"></span> Home</a>
@@ -31,18 +31,24 @@
                     <li class="nav-item mx-1" th:classappend="${activeTab == 'data'}? 'active' : null" sec:authorize="hasRole('ROLE_USER')">
                         <a class="nav-link" th:href="@{/user/data}"><span class="fa fa-chart-bar"></span> Data</a>
                     </li>
-                    <li class="nav-item mx-1" th:classappend="${activeTab == 'settings'}? 'active' : null" sec:authorize="hasRole('ROLE_USER')">
-                        <a class="nav-link" th:href="@{/user/settings}"><span class="fa fa fa-wrench"></span> Settings</a>
+                    <li class="nav-item mx-1" th:classappend="${activeTab == 'sources'}? 'active' : null" sec:authorize="hasRole('ROLE_USER')">
+                        <a class="nav-link" th:href="@{/user/sources}"><span class="fa fa fa-wrench"></span> Sources</a>
                     </li>
-                    <li class="nav-item mx-1" th:classappend="${activeTab == 'panel'}? 'active' : null" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="nav-link" th:href="@{/admin/panel}"><span class="fa fa-lock"></span> Panel</a>
+                    <li class="nav-item mx-1" th:classappend="${activeTab == 'settings'}? 'active' : null" sec:authorize="hasRole('ROLE_USER')">
+                        <a class="nav-link" th:href="@{/user/settings}"><span class="fa fa fa-lock"></span> Settings</a>
+                    </li>
+                    <li class="nav-item mx-1" th:classappend="${activeTab == 'companies'}? 'active' : null" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link" th:href="@{/admin/companies}"><span class="fa fa-wrench"></span> Companies</a>
+                    </li>
+                    <li class="nav-item mx-1" th:classappend="${activeTab == 'settings'}? 'active' : null" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link" th:href="@{/admin/settings}"><span class="fa fa fa-lock"></span> Settings</a>
                     </li>
                 </ul>
                 <span class="navbar-text mx-3" sec:authorize="isAuthenticated()">
                     Logged as&nbsp;<span sec:authentication="name"></span>
                 </span>
                 <form action="#" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-                    <button class="btn btn-secondary float-right" type="submit" id="submit">Logout</button>
+                    <button class="btn btn-secondary float-right" type="submit" companyId="submit">Logout</button>
                 </form>
             </div>
         </div>

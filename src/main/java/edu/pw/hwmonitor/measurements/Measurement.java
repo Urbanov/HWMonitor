@@ -31,27 +31,27 @@ public class Measurement {
         return feederId;
     }
 
-    public void setFeederId(Integer v) {
-        this.feederId = v;
+    public void setFeederId(Integer feederId) {
+        this.feederId = feederId;
     }
 
     public Integer getValue() {
         return value;
     }
 
-    public void setValue(Integer v) {
-        this.value = v;
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime v) {
-        this.time = v;
+    public void setTime(LocalDateTime time) {
+        this.time = time;
     }
 
-    public void setTime(String v) {
-        this.time = LocalDateTime.parse(v, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public void setTime(String time) {
+        this.time = LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

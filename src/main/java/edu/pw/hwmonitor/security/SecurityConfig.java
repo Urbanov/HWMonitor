@@ -33,20 +33,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/403").permitAll()
             .antMatchers("/user/**").hasRole("USER")
             .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/common/**").hasAnyRole("USER", "ADMIN")
             .and()
             .formLogin().loginPage("/login").failureUrl("/login-error").successHandler((request, response, auth) -> {
                 DefaultRedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
                 String role = securityManager().getRoles().toString();
                 if (role.contains("ADMIN")) {
-                    redirectStrategy.sendRedirect(request, response, "/admin/panel");
+                    redirectStrategy.sendRedirect(request, response, "/admin/companies");
                 }
                 else {
                     redirectStrategy.sendRedirect(request, response, "/user/data");
                 }
             })
             .and()
-            .exceptionHandling().accessDeniedPage("/accessDenied");
-        http.csrf().disable();
+            .exceptionHandling().accessDeniedPage("/access-denied")
+            .and()
+            .csrf().disable();
     }
 
     @Autowired

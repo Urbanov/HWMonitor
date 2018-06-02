@@ -1,31 +1,31 @@
-package edu.pw.hwmonitor.controllers;
+package edu.pw.hwmonitor.controllers.requests;
 
 public class CompanyCreateRequest {
     private String name;
     private String username;
     private String password;
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    void setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 }

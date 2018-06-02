@@ -36,6 +36,10 @@ public class Manager {
         this.measurementRepository = measurementRepository;
     }
 
+    public HashMap<Integer, Connection> getConnections() {
+        return connections;
+    }
+
     public synchronized void onMessageReceived(Connection connection, Message message) {
         try {
             switch (message.getType()) {
@@ -75,7 +79,7 @@ public class Manager {
 
     private void handleMessage(Connection connection, HelloMessage message) {
         Optional<Integer> databaseId = companyRepository.findByNameEquals(message.getName())
-                .flatMap(company -> feederRepository.findTopBySerialEqualsAndCompanyIdEquals(message.getId(), company.getId()))
+                .flatMap(company -> feederRepository.findTopBySerialEqualsAndCompanyIdEquals(message.getId(), company.getCompanyId()))
                 .map(Feeder::getId);
 
         if (databaseId.isPresent()) {

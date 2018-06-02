@@ -81,11 +81,11 @@ public class ControllerTest {
 
         Company first = new Company();
         first.setName("f");
-        first.setCompany_id(1L);
+        first.setCompanyId(1L);
 
         Company second = new Company();
         second.setName("f");
-        second.setCompany_id(2L);
+        second.setCompanyId(2L);
 
         List<Company> expected = new ArrayList<>();
         expected.add(first);
@@ -127,10 +127,10 @@ public class ControllerTest {
 
         Company first = new Company();
         first.setName("f");
-        first.setCompany_id(1L);
+        first.setCompanyId(1L);
         Company second = new Company();
         second.setName("f");
-        second.setCompany_id(2L);
+        second.setCompanyId(2L);
         List<Company> expected = new ArrayList<>();
         expected.add(first);
         expected.add(second);

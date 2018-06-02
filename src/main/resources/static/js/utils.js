@@ -4,6 +4,8 @@ const messages = {
     COMPANY_FAIL: "Could not register company",
     FEEDER_SUCCESS: "Feeder registered successfully",
     FEEDER_FAIL: "Could not register feeder",
+    PASSWORD_SUCCESS: "Password changed successfully",
+    PASSWORD_FAIL: "Could not change password"
 };
 
 function showAlert(success, text) {

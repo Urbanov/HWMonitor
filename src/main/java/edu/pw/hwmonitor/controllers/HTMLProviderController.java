@@ -25,21 +25,31 @@ public class HTMLProviderController {
 
     @RequestMapping("/user/data")
     public String userData() {
-        return "user/data";
+        return "data";
+    }
+
+    @RequestMapping("/user/sources")
+    public String userSources() {
+        return "sources";
     }
 
     @RequestMapping("/user/settings")
     public String userSettings() {
-        return "user/settings";
+        return "settings";
     }
 
-    @RequestMapping("/admin/panel")
-    public String adminPanel() {
-        return "admin/panel";
+    @RequestMapping("/admin/companies")
+    public String adminCompanies() {
+        return "companies";
     }
 
-    @RequestMapping("/accessDenied")
-    public String e403() {
+    @RequestMapping("/admin/settings")
+    public String adminSettings() {
+        return "settings";
+    }
+
+    @RequestMapping("/access-denied")
+    public String error403() {
         return "403";
     }
 }

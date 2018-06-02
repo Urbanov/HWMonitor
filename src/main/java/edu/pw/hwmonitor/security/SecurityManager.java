@@ -1,11 +1,10 @@
 package edu.pw.hwmonitor.security;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 public class SecurityManager {
 
@@ -14,9 +13,11 @@ public class SecurityManager {
     }
 
     public List<String> getRoles() {
-        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         ArrayList<String> roles = new ArrayList<>();
-        for(SimpleGrantedAuthority a : authorities) roles.add(a.toString());
+        for (GrantedAuthority auth : authorities) {
+            roles.add(auth.toString());
+        }
         return roles;
     }
 }

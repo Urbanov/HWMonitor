@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS feeders (
 );
 
 CREATE TABLE IF NOT EXISTS measurements (
-   id SERIAL PRIMARY KEY,
+   companyId SERIAL PRIMARY KEY,
    feeder_id INTEGER NOT NULL,
    value INTEGER NOT NULL,
    time TIMESTAMP NOT NULL,

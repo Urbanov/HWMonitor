@@ -1,5 +1,5 @@
 INSERT INTO users(username, password, enabled) VALUES ('jack','$2a$10$bd4Qn3nFAGmg3hdohmyZfuj9.ibNEkfFQlqdDlPMwA0ZCkbg7Arr.', true) on conflict do nothing;
-INSERT INTO users(username, password, enabled) VALUES ('peter','$2a$10$H6I9wy8Tvv9DbA14IiEQ9eBLU/QFDhqYGG9FUXlGGdRCSgtOCjAqS', true) on conflict do nothing;
+-- INSERT INTO users(username, password, enabled) VALUES ('peter','$2a$10$H6I9wy8Tvv9DbA14IiEQ9eBLU/QFDhqYGG9FUXlGGdRCSgtOCjAqS', true) on conflict do nothing;
 
 INSERT INTO user_roles (user_role_id, username, role) VALUES (0, 'jack', 'ROLE_ADMIN') on conflict do nothing;
 -- INSERT INTO user_roles (username, role) VALUES ('jack', 'ROLE_DRUGA') on conflict do nothing;

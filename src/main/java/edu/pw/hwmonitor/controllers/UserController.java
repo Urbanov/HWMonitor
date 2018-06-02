@@ -3,6 +3,7 @@ package edu.pw.hwmonitor.controllers;
 import com.google.common.collect.ImmutableMap;
 import edu.pw.hwmonitor.companies.Company;
 import edu.pw.hwmonitor.companies.CompanyRepository;
+import edu.pw.hwmonitor.controllers.requests.DataRequest;
 import edu.pw.hwmonitor.feeders.Feeder;
 import edu.pw.hwmonitor.feeders.FeederRepository;
 import edu.pw.hwmonitor.measurements.Measurement;
@@ -21,12 +22,13 @@ import java.util.stream.Stream;
 
 @RestController
 public class UserController {
+
     @Autowired
     public UserController(SecurityManager securityManager, CompanyRepository companyRepository, FeederRepository feederRepository, MeasurementRepository measurementRepository) {
-        this.securityManager=securityManager;
-        this.companyRepository=companyRepository;
-        this.feederRepository=feederRepository;
-        this.measurementRepository=measurementRepository;
+        this.securityManager = securityManager;
+        this.companyRepository = companyRepository;
+        this.feederRepository = feederRepository;
+        this.measurementRepository = measurementRepository;
     }
 
     private SecurityManager securityManager;
@@ -34,7 +36,7 @@ public class UserController {
     private FeederRepository feederRepository;
     private MeasurementRepository measurementRepository;
 
-
+    // TODO refactor
     @GetMapping("/user/feederMetadata")
     public List<ImmutableMap<String, String>> getfeederMetadata() {
         List<Company> companies = companyAuthorizations();
@@ -44,12 +46,12 @@ public class UserController {
         for (Company c : companies) {
             result.add(ImmutableMap.of(
                     "x", "1",
-                    "serial", c.getId().toString(),
+                    "serial", c.getCompanyId().toString(),
                     "company_id",c.getName(),
                     "desc", c.getRole()
                     ));
 
-            feeders = feederRepository.findAllByCompanyIdEquals(c.getId());
+            feeders = feederRepository.findAllByCompanyIdEquals(c.getCompanyId());
             for(Feeder f : feeders) {
                 result.add(ImmutableMap.of(
                         "x", "0",
@@ -61,6 +63,7 @@ public class UserController {
         return result;
     }
 
+    // TODO refactor
     @PostMapping("/user/feederMeasurements")
     public ResponseEntity<List<ImmutableMap<String, String>>> feederMeasurements(@RequestBody DataRequest dataRequest) {
         if(!isFeederAllowed(dataRequest.getCompanyId())) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -89,16 +92,17 @@ public class UserController {
     @PostMapping("/user/create-feeder")
     public ResponseEntity<HttpStatus> createFeeder(@RequestBody Feeder feeder) {
         Company company = companyAuthorizations().get(0);
-        feeder.setCompanyId(company.getId());
+        feeder.setCompanyId(company.getCompanyId());
 
-        if (feederRepository.findTopBySerialEqualsAndCompanyIdEquals(feeder.getSerial(), company.getId()).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE);
+        if (feederRepository.findTopBySerialEqualsAndCompanyIdEquals(feeder.getSerial(), company.getCompanyId()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
         feederRepository.save(feeder);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // TODO refactor
     private List<Company> companyAuthorizations() {
         List<Company> companies = new ArrayList<>();
         List<String> roles = securityManager.getRoles();
@@ -110,11 +114,12 @@ public class UserController {
         return companies;
     }
 
+    // TODO refactor
     private boolean isFeederAllowed(long companyId) {
         List<Long> ids = new ArrayList<>();
         List<Company> companies = companyAuthorizations();
         for (Company c : companies){
-                ids.add(c.getId());
+                ids.add(c.getCompanyId());
         }
         return ids.contains(companyId);
     }

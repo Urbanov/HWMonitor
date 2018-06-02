@@ -20,7 +20,14 @@ public class TcpServer extends Thread {
         this.manager = manager;
     }
 
-    // TODO close
+    public void close() {
+        try {
+            serverSocket.close();
+            manager.getConnections().forEach((key, connection) -> manager.onDisconnected(connection));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void run() {
