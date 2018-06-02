@@ -17,6 +17,12 @@ body {
     background-color: #444;
 }
 
+.login {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .element {
     padding: 20px;
     margin-top: 30px;
@@ -25,9 +31,10 @@ body {
 }
 
 .element > h1 {
-    font-weight: 100;
+    font-weight: 300;
     margin-bottom: 20px;
 }
+
 .element > h2 {
     font-weight: 100;
     margin-bottom: 20px;

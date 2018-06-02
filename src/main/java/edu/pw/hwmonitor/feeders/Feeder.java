@@ -19,7 +19,7 @@ public class Feeder {
     private Long companyId;
 
     @Column(name = "FEEDER_DESC", length = 64)
-    private String desc;
+    private String description;
 
     @Column(name = "SECRET", length = 64)
     private String secret;
@@ -42,12 +42,12 @@ public class Feeder {
         this.serial = v;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String v) {
-        this.desc = v;
+    public void setDescription(String v) {
+        this.description = v;
     }
 
     public String getSecret() { return secret; }

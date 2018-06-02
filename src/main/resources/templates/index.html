@@ -1,19 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout.html" th:with="activeTab='home'" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <title>Main page</title>
+    <title>home</title>
+    <script type="text/javascript" th:src="@{/js/login.js}"></script>
 </head>
 <body>
-<div layout:fragment="content" style="width: 40%;align: center;" >
+<div layout:fragment="content">
     <div th:replace="fragments/alert :: alert"></div>
-    <h1>HWMonitor</h1>
-    <h1>monitor your hardware in real time</h1>
-    <p>You can access your data after login.</p>
-    <ul>
-    <li>Go to <a href="/user/index" th:href="@{/user/index}">data</a></li>
-    </ul>
+
+    <div class="jumbotron jumbotron-fluid element login" sec:authorize="!isAuthenticated()">
+        <script th:inline="javascript" th:if="${loginError}">
+            showAlert(false, messages.LOGIN_FAILED);
+        </script>
+        <h1>Login to access data</h1>
+        <form th:action="@{/login}" method="post" class="needs-validation" novalidate="novalidate" autocomplete="off">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Login</span>
+                </div>
+                <input type="text" name="username" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid login</div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Password</span>
+                </div>
+                <input type="password" name="password" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid password</div>
+            </div>
+            <button class="btn btn-dark" type="submit" id="submit">Submit</button>
+        </form>
+    </div>
+    <div class="jumbotron jumbotron-fluid element"  sec:authorize="isAuthenticated()">
+        <p class="lead">You are already logged in.</p>
+    </div>
 </div>
-
-
 </body>
 </html>

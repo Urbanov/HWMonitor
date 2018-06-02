@@ -3,8 +3,7 @@ package edu.pw.hwmonitor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.pw.hwmonitor.companies.Company;
 import edu.pw.hwmonitor.companies.CompanyRepository;
-import edu.pw.hwmonitor.controllers.RequestController;
-import edu.pw.hwmonitor.feeders.Feeder;
+import edu.pw.hwmonitor.controllers.UserController;
 import edu.pw.hwmonitor.feeders.FeederRepository;
 import edu.pw.hwmonitor.measurements.MeasurementRepository;
 import edu.pw.hwmonitor.security.SecurityManager;
@@ -12,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,7 +33,7 @@ public class ControllerTest {
     private MeasurementRepository measurementRepository;
     private ObjectMapper mapper = new ObjectMapper();
 
-    private RequestController controller;
+    private UserController controller;
 
     @Before
     public void setup() {
@@ -43,7 +41,7 @@ public class ControllerTest {
         companyRepository=Mockito.mock(CompanyRepository.class);
         feederRepository=Mockito.mock(FeederRepository.class);
         measurementRepository=Mockito.mock(MeasurementRepository.class);
-        controller = new RequestController(securityManager,companyRepository,feederRepository,measurementRepository);
+        controller = new UserController(securityManager,companyRepository,feederRepository,measurementRepository);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 

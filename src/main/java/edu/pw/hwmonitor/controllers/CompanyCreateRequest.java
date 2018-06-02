@@ -5,12 +5,27 @@ public class CompanyCreateRequest {
     private String username;
     private String password;
 
-    String getName() {return name; }
-    void setName(String name) {this.name = name;}
+    String getName() {
+        return name;
+    }
 
-    String getUsername() {return username; }
-    void setUsername(String username) {this.username = username;}
+    void setName(String name) {
+        this.name = name;
+    }
 
-    String getPassword() {return password; }
-    void setPassword(String password) {this.password = password;}
+    String getUsername() {
+        return username;
+    }
+
+    void setUsername(String username) {
+        this.username = username;
+    }
+
+    String getPassword() {
+        return password;
+    }
+
+    void setPassword(String password) {
+        this.password = password;
+    }
 }

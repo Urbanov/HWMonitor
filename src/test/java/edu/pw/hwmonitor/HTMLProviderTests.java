@@ -27,8 +27,7 @@ public class HTMLProviderTests {
         viewResolver.setPrefix("/templates/");
         viewResolver.setSuffix(".html");
 
-        securityManager = mock(SecurityManager.class);
-        controller = new HTMLProviderController(securityManager);
+        controller = new HTMLProviderController();
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setViewResolvers(viewResolver)
                 .build();

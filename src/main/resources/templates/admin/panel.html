@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout.html" th:with="activeTab='panel'">
+<head>
+    <title>panel</title>
+    <script type="text/javascript" th:src="@{/js/admin/panel.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div th:replace="fragments/alert :: alert"></div>
+    <div class="jumbotron jumbotron-fluid element">
+        <h1>Add new company</h1>
+        <form class="needs-validation" novalidate="novalidate" autocomplete="off">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Company name</span>
+                </div>
+                <input type="text" id="name" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid name</div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Login</span>
+                </div>
+                <input type="text" id="login" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid login</div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Password</span>
+                </div>
+                <input type="password" id="password" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid password</div>
+            </div>
+            <button class="btn btn-dark" type="submit" id="submit">Submit</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title layout:title-pattern="$DECORATOR_TITLE | $CONTENT_TITLE">HWMonitor</title>
+    <title layout:title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">HWMonitor</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
@@ -25,25 +25,25 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
-
                     <li class="nav-item mx-1" th:classappend="${activeTab == 'home'}? 'active' : null">
                         <a class="nav-link" th:href="@{/}"><span class="fa fa-home"></span> Home</a>
                     </li>
-
-                    <li class="nav-item mx-1" th:classappend="${activeTab == 'secure'}? 'active' : null"  sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/user/index}"><span class="fa fa-chart-bar"></span> Data</a>
+                    <li class="nav-item mx-1" th:classappend="${activeTab == 'data'}? 'active' : null" sec:authorize="hasRole('ROLE_USER')">
+                        <a class="nav-link" th:href="@{/user/data}"><span class="fa fa-chart-bar"></span> Data</a>
                     </li>
-
-                    <li class="nav-item mx-1" th:classappend="${activeTab == 'stats'}? 'active' : null"  sec:authorize="isAuthenticated()">
-                        <span class="input-group-text">Logged in user:  <span sec:authentication="name"></span></span>
+                    <li class="nav-item mx-1" th:classappend="${activeTab == 'settings'}? 'active' : null" sec:authorize="hasRole('ROLE_USER')">
+                        <a class="nav-link" th:href="@{/user/settings}"><span class="fa fa fa-wrench"></span> Settings</a>
                     </li>
-
-                    <li class="nav-item mx-1" th:classappend="${activeTab == 'stats'}? 'active' : null"  sec:authorize="isAuthenticated()">
-                        <form action="#" th:action="@{/logout}" method="post">
-                            <button class="btn btn-light disabled" type="submit" id="submit">Logout</button>
-                        </form>
+                    <li class="nav-item mx-1" th:classappend="${activeTab == 'panel'}? 'active' : null" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link" th:href="@{/admin/panel}"><span class="fa fa-lock"></span> Panel</a>
                     </li>
                 </ul>
+                <span class="navbar-text mx-3" sec:authorize="isAuthenticated()">
+                    Logged as&nbsp;<span sec:authentication="name"></span>
+                </span>
+                <form action="#" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                    <button class="btn btn-secondary float-right" type="submit" id="submit">Logout</button>
+                </form>
             </div>
         </div>
     </nav>

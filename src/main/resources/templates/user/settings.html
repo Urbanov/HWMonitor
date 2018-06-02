@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout.html" th:with="activeTab='settings'">
+<head>
+    <title>settings</title>
+    <script type="text/javascript" th:src="@{/js/user/settings.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div th:replace="fragments/alert :: alert"></div>
+    <div class="jumbotron jumbotron-fluid element">
+        <h1>Add new feeder</h1>
+        <form class="needs-validation" novalidate="novalidate" autocomplete="off">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Identificator</span>
+                </div>
+                <input type="number" id="serial" min="0" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid identificator</div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Description</span>
+                </div>
+                <input type="text" id="description" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid description</div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Secret</span>
+                </div>
+                <input type="text" id="secret" class="form-control" required="required"/>
+                <div class="invalid-feedback">Invalid secret</div>
+            </div>
+            <button class="btn btn-dark" type="submit" id="submit">Submit</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

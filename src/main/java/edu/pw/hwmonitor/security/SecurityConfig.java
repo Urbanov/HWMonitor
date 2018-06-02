@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.DefaultRedirectStrategy;
 
 import javax.sql.DataSource;
 
@@ -27,24 +28,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/css/**", "/index").permitAll()
-                .antMatchers("/403").permitAll()
-                .antMatchers("/user/**").hasRole("USER")
-                .and()
-                .formLogin().loginPage("/login").failureUrl("/login-error")
-                .and()
-                .exceptionHandling().accessDeniedPage("/accessDenied");
-        http
-                .csrf().disable();
+        http.authorizeRequests()
+            .antMatchers("/css/**", "/index").permitAll()
+            .antMatchers("/403").permitAll()
+            .antMatchers("/user/**").hasRole("USER")
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .and()
+            .formLogin().loginPage("/login").failureUrl("/login-error").successHandler((request, response, auth) -> {
+                DefaultRedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+                String role = securityManager().getRoles().toString();
+                if (role.contains("ADMIN")) {
+                    redirectStrategy.sendRedirect(request, response, "/admin/panel");
+                }
+                else {
+                    redirectStrategy.sendRedirect(request, response, "/user/data");
+                }
+            })
+            .and()
+            .exceptionHandling().accessDeniedPage("/accessDenied");
+        http.csrf().disable();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().dataSource(dataSource)
-                .passwordEncoder(new BCryptPasswordEncoder())
-                .usersByUsernameQuery("select username,password, enabled from users where username=?")
-                .authoritiesByUsernameQuery("select username, role from user_roles where username=?");
+            .passwordEncoder(new BCryptPasswordEncoder())
+            .usersByUsernameQuery("select username, password, enabled from users where username=?")
+            .authoritiesByUsernameQuery("select username, role from user_roles where username=?");
     }
 }

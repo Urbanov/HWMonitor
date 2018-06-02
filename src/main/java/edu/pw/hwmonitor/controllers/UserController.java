@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-public class RequestController {
+public class UserController {
     @Autowired
-    public RequestController(SecurityManager securityManager, CompanyRepository companyRepository, FeederRepository feederRepository, MeasurementRepository measurementRepository) {
+    public UserController(SecurityManager securityManager, CompanyRepository companyRepository, FeederRepository feederRepository, MeasurementRepository measurementRepository) {
         this.securityManager=securityManager;
         this.companyRepository=companyRepository;
         this.feederRepository=feederRepository;
@@ -55,7 +55,7 @@ public class RequestController {
                         "x", "0",
                         "serial", f.getSerial().toString(),
                         "company_id",f.getCompanyId().toString(),
-                        "desc", f.getDesc()));
+                        "desc", f.getDescription()));
             }
         }
         return result;
@@ -86,6 +86,18 @@ public class RequestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/user/create-feeder")
+    public ResponseEntity<HttpStatus> createFeeder(@RequestBody Feeder feeder) {
+        Company company = companyAuthorizations().get(0);
+        feeder.setCompanyId(company.getId());
+
+        if (feederRepository.findTopBySerialEqualsAndCompanyIdEquals(feeder.getSerial(), company.getId()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE);
+        }
+
+        feederRepository.save(feeder);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     private List<Company> companyAuthorizations() {
         List<Company> companies = new ArrayList<>();
