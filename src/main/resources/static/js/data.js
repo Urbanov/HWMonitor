@@ -1,95 +1,127 @@
-// TODO clean up
-
 let chartHandler;
 
 $(document).ready(() => {
-    loadData();
-    document.getElementById("time1").value = moment(moment(Date.now()).subtract(10, 'years')).format("YYYY-MM-DDTHH:MM");
-    document.getElementById("time2").value = moment(Date.now()).format("YYYY-MM-DDTHH:MM");
-});
+    updateFeederList();
 
-function loadData() {
-    $.get("user/feeder-metadata", response => {
-        console.log(response);
+    $("#chartButton").click(() => {
+        $("#listView").fadeOut(150, () => {
+            $("#chartView").fadeIn(150);
+        });
+        $("#listButton").toggleClass("active");
+        $("#chartButton").toggleClass("active");
     });
-}
 
-function createCompanyButton(element, index, array){
-    if(element.x==="1") {
-        if(index!==0)
-            $("#feederButtons").append('&nbsp;');
-        let ct='<div><h1 style="font-size: 25px;">Company: ' + element.company_id+'</h1></div>&nbsp;';
-        $("#feederButtons").append(ct);
-        companyId=element.serial;
-        console.log("c: "+companyId)
-    }
-    if(element.x==="0") {
-        var button = document.createElement('button');
-        button.classList.add("btn", "btn-block", "btn-primary", "text-left");
-        button.id=index;
-        button.textContent=element.serial + ': '+element.desc;
-        document.getElementById("feederButtons").appendChild(button);
-        document.getElementById(index).addEventListener("click", function() {
-            measurementData(this.id);
+    $("#listButton").click(() => {
+        $("#chartView").fadeOut(150, () => {
+            $("#listView").fadeIn(150);
+        });
+        $("#listButton").toggleClass("active");
+        $("#chartButton").toggleClass("active");
+    });
 
-        }, false);
-    }
-}
-
-function measurementData(index) {
-    document.getElementById("measurementContent").innerHTML = "";
-    let ct='<thead> <tr> <th>Serial</th> <th>Timestamp</th> <th>Value</th> </tr> </thead><tbody id = "mes"></tbody>';
-    $("#measurementContent").append(ct);
-
-
-    let d = moment(document.getElementById("time1").value);
-    let d2 = moment(document.getElementById("time2").value);
-
-    console.log("a: "+companyId)
-    $.ajax({
-        type: "POST",
-        contentType: "application/json",
-        url: "feederMeasurements",
-        data: JSON.stringify({ companyId: metadata[index].company_id, serial: metadata[index].serial, timel: moment(d).format("YYYY-MM-DD HH:mm:ss") , timeh: moment(d2).format("YYYY-MM-DD HH:mm:ss")}),
-        success: response => {
-            response.forEach(showData);
-            data=response;
-            showChart();
+    $.fn.datetimepicker.Constructor.Default = $.extend($.fn.datetimepicker.Constructor.Default, {
+        icons : {
+            time : 'fas fa-clock',
+            date : 'fas fa-calendar',
+            up : 'fas fa-arrow-up',
+            down : 'fas fa-arrow-down',
+            previous : 'fas fa-chevron-left',
+            next : 'fas fa-chevron-right',
+            today : 'fas fa-calendar-check-o',
+            clear : 'fas fa-trash',
+            close : 'fas fa-times'
         }
     });
-}
 
-function showData(element, index, array) {
-    let ct='<tr><td>'+element.feederSerial+'</td><td>'+moment(element.time).format("YYYY-MM-DD HH:mm:ss")+'</td><td>'+element.value+'</td></tr>';
-    $("#mes").append(ct);
-}
+    $('#datetimepicker').datetimepicker({
+        format: "YYYY-MM-DD HH:mm:ss",
+        inline: true,
+        date: moment(moment(Date.now()).subtract(1, 'days')),
+        sideBySide: false,
+        locale: moment.locale('de')
+    });
 
-function showChart() {
-    if(chartHandler!==undefined) chartHandler.clear();
     chartHandler = new Chart($("#chart"), {
         type: 'line',
         data: {
             datasets:[{
-                data: data.map((elem) => elem.value),
+                data: [],
                 backgroundColor: "rgba(54, 162, 235, 0.6)"
             }],
-            labels: data.map((elem) => moment(elem.time).format("YYYY-MM-DD HH:mm:ss"))
+            labels: [],
         },
         options: {
+            animation: false,
             maintainAspectRatio: false,
             legend: {
                 display: false,
             },
             scales: {
+                xAxes: [{
+                    display: false
+                }],
                 yAxes: [{
                     ticks: {
                         callback: (value, index, values) => {
-                            return value;
+                            return value + "\u2103";
                         },
-                        beginAtZero: true
+                        min: 0,
+                        max: 100
                     }
                 }]
             }
         }
     });
+});
+
+function updateFeederList() {
+    $.get("/user/feeder-metadata", response => {
+        response.forEach(feeder => {
+            $("#feederList").append($("<button/>", {
+                text: "#" + feeder.serial + ": " + feeder.description,
+                class: "btn btn-block btn-outline-dark text-left",
+                click: () => getMeasurments(feeder.serial)
+            }));
+        });
+    });
+}
+
+function getMeasurments(serial) {
+    $("#feederList").find(".active").removeClass("active");
+    $(event.currentTarget).addClass("active");
+
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/user/feeder-measurments",
+        data: JSON.stringify({
+            serial: serial,
+            begin: moment($("#datetimepicker").datetimepicker("viewDate")).format("YYYY-MM-DD HH:mm:ss"),
+            end: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
+        }),
+        success: response => {
+            if (response.length > 0) {
+                $("#placeholder").fadeOut(150, () => {
+                    $("#measurments").fadeIn(150);
+                    showMeasurmentsAsChart(response);
+                    showMeasurmentsAsList(response);
+                });
+            }
+            else {
+                $("#measurments").fadeOut(150, () => {
+                    $("#placeholder").fadeIn(150);
+                });
+            }
+        }
+    });
+}
+
+function showMeasurmentsAsChart(data) {
+    chartHandler.data.datasets[0].data = data.map(elem => elem.value);
+    chartHandler.data.labels = data.map(elem => elem.timestamp);
+    chartHandler.update();
+}
+
+function showMeasurmentsAsList(data) {
+    $("#table").bootstrapTable("load", data);
 }

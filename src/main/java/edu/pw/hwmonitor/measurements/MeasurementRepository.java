@@ -13,5 +13,5 @@ public interface MeasurementRepository extends Repository<Measurement, Long> {
     @RestResource
     Measurement save(Measurement measurement);
 
-    List<Measurement> findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeDesc(Integer feederId, LocalDateTime begin, LocalDateTime end);
+    List<Measurement> findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeAsc(Integer feederId, LocalDateTime begin, LocalDateTime end);
 }

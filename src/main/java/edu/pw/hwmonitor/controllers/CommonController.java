@@ -26,10 +26,12 @@ public class CommonController {
     @PostMapping("/common/update-password")
     public ResponseEntity<HttpStatus> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         String username = securityManager.getUsername();
-        User user = userRepository.findByUsernameEquals(username).get();
+        User user = userRepository.findByUsernameEquals(username).orElse(new User());
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        if(!bCryptPasswordEncoder.matches(passwordUpdateRequest.getOldPassword(),user.getPassword())) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        if (!bCryptPasswordEncoder.matches(passwordUpdateRequest.getOldPassword(), user.getPassword())) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
 
         user.setPassword(passwordUpdateRequest.getNewPassword());
         userRepository.save(user);

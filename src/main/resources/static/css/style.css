@@ -35,11 +35,6 @@ body {
     margin-bottom: 20px;
 }
 
-.element > h2 {
-    font-weight: 100;
-    margin-bottom: 20px;
-}
-
 .alert {
     position: absolute;
     margin-top: -10px;
@@ -52,8 +47,12 @@ body {
     width: 100%;
 }
 
-.stats {
-    height: 300px;
+#chartView {
+    height: 500px;
+}
+
+.view {
+    margin-top: 20px;
 }
 
 @media (max-width: 1100px) {

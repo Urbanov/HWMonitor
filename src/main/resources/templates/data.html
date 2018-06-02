@@ -2,47 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/layout.html" th:with="activeTab='data'" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.css" integrity="sha256-6b6iFXzi5Cqfsfsz0RicGI49/k5qUPiw1t8EEAoqHtE=" crossorigin="anonymous"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js" integrity="sha256-L3S3EDEk31HcLA5C6T2ovHvOcD80+fgqaCDt2BAi92o=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js" integrity="sha256-l+jZldmOASkIPelan4NKyAFD+oGNqPulrVQwsjxuCXc=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha18/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha18/css/tempusdominus-bootstrap-4.min.css" />
     <script type="text/javascript" th:src="@{/js/data.js}"></script>
 </head>
 <body>
     <div layout:fragment="content">
         <div th:replace="fragments/alert :: alert"></div>
         <div class="row">
-
-            <div class="col-lg-5 col-sm-12">
+            <div class="col-lg-4 col-sm-12">
                 <div class="jumbotron jumbotron-fluid element">
-                    <h1>You have access to:</h1>
-                    <div id="feederButtons"></div>
+                    <h1>Your data sources</h1>
+                    <div id="feederList"></div>
                 </div>
-            </div>
-
-            <div class="col-lg-5 col-sm-12">
                 <div class="jumbotron jumbotron-fluid element">
-
-                </div>
-
-            </div>
-            <div class="col-lg-7 col-sm-12">
-
-                <div class="jumbotron jumbotron-fluid element">
-
-                </div>
-
-
-                <div class="jumbotron jumbotron-fluid element">
-                    <h1>Data from your feeder</h1>
-                    <div class="stats">
-                        <canvas id="chart"></canvas>
+                    <h1>Fetch data starting from</h1>
+                    <div class="form-group">
+                        <div id="datetimepicker"></div>
                     </div>
                 </div>
-
+            </div>
+            <div class="col-lg-8 col-sm-12">
+                <div class="jumbotron jumbotron-fluid element">
+                    <h1>Measurments</h1>
+                    <div id="placeholder">
+                        <p class="lead">Nothing to show</p>
+                    </div>
+                    <div id="measurments" class="collapse">
+                        <div class="btn-group d-flex" role="group">
+                            <button id="chartButton" class="btn btn-outline-dark w-100 active">Chart</button>
+                            <button id="listButton" class="btn btn-outline-dark w-100">List</button>
+                        </div>
+                        <div id="listView" class="collapse view">
+                            <table id="table" data-pagination="true" data-toggle="table" data-page-list="[10]">
+                                <thead>
+                                <tr>
+                                    <th data-field="timestamp">Timestamp</th>
+                                    <th data-field="value">Temperature [&#x2103;]</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div id="chartView" class="view">
+                            <canvas id="chart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-
-
-
     </div>
 </body>
 </html>

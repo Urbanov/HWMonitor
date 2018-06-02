@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 public class UserController {
@@ -36,62 +36,36 @@ public class UserController {
     private FeederRepository feederRepository;
     private MeasurementRepository measurementRepository;
 
-    // TODO refactor
-    @GetMapping("/user/feederMetadata")
-    public List<ImmutableMap<String, String>> getfeederMetadata() {
-        List<Company> companies = companyAuthorizations();
-        if(companies.size()==0) return new ArrayList<ImmutableMap<String, String>>(){};
-        List<Feeder> feeders;
-        List<ImmutableMap<String, String>> result = new ArrayList<>();
-        for (Company c : companies) {
-            result.add(ImmutableMap.of(
-                    "x", "1",
-                    "serial", c.getCompanyId().toString(),
-                    "company_id",c.getName(),
-                    "desc", c.getRole()
-                    ));
-
-            feeders = feederRepository.findAllByCompanyIdEquals(c.getCompanyId());
-            for(Feeder f : feeders) {
-                result.add(ImmutableMap.of(
-                        "x", "0",
-                        "serial", f.getSerial().toString(),
-                        "company_id",f.getCompanyId().toString(),
-                        "desc", f.getDescription()));
-            }
-        }
-        return result;
+    @GetMapping("/user/feeder-metadata")
+    public List<Feeder> getfeederMetadata() {
+        Company company = getUserAuthorizations();
+        return new ArrayList<>(feederRepository.findAllByCompanyIdEquals(company.getCompanyId()));
     }
 
-    // TODO refactor
-    @PostMapping("/user/feederMeasurements")
+    @PostMapping("/user/feeder-measurments")
     public ResponseEntity<List<ImmutableMap<String, String>>> feederMeasurements(@RequestBody DataRequest dataRequest) {
-        if(!isFeederAllowed(dataRequest.getCompanyId())) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        Company company = getUserAuthorizations();
+        Optional<Feeder> optionalFeeder = feederRepository.findTopBySerialEqualsAndCompanyIdEquals(dataRequest.getSerial(), company.getCompanyId());
 
-        Optional<Feeder> feederOptional = feederRepository.findTopBySerialEqualsAndCompanyIdEquals(dataRequest.getSerial(),dataRequest.getCompanyId());
-        if(feederOptional.isPresent()) {
-            Feeder feeder = feederOptional.get();
-
-            List<Measurement> measurements = measurementRepository.
-                    findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeDesc(feeder.getId(), dataRequest.getTimel(), dataRequest.getTimeh());
-
-            if(measurements.size()==0) return new ResponseEntity<>(HttpStatus.OK);
-            Iterator<Measurement> it = measurements.iterator();
-            return new ResponseEntity<>(Stream.iterate(it.next(), measurement -> it.next())
-                    .limit(measurements.size())
-                    .map(measurement -> ImmutableMap.of(
-                            "feederSerial", feederRepository.findTopByIdEquals(measurement.getFeederId()).get().getSerial().toString(),
-                            "time", measurement.getTime().toString(),
-                            "value", measurement.getValue().toString()
-                    ))
-                    .collect(Collectors.toList()),HttpStatus.OK);
+        if (optionalFeeder.isPresent()) {
+            List<Measurement> measurments = measurementRepository.findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeAsc(
+                optionalFeeder.get().getId(), dataRequest.getBegin(), dataRequest.getEnd()
+            );
+            return new ResponseEntity<>(measurments.stream()
+                .map(measurment -> ImmutableMap.of(
+                    "serial", optionalFeeder.get().getSerial().toString(),
+                    "timestamp", measurment.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    "value", measurment.getValue().toString()
+                ))
+                .collect(Collectors.toList()), HttpStatus.OK);
         }
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/user/create-feeder")
     public ResponseEntity<HttpStatus> createFeeder(@RequestBody Feeder feeder) {
-        Company company = companyAuthorizations().get(0);
+        Company company = getUserAuthorizations();
         feeder.setCompanyId(company.getCompanyId());
 
         if (feederRepository.findTopBySerialEqualsAndCompanyIdEquals(feeder.getSerial(), company.getCompanyId()).isPresent()) {
@@ -102,25 +76,14 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // TODO refactor
-    private List<Company> companyAuthorizations() {
+    private Company getUserAuthorizations() {
         List<Company> companies = new ArrayList<>();
         List<String> roles = securityManager.getRoles();
-        Optional<Company> c;
+        Optional<Company> company;
         for (String role : roles) {
-            c = companyRepository.findTopByRoleEquals(role);
-            if(c.isPresent()) companies.add(c.get());
+            company = companyRepository.findTopByRoleEquals(role);
+            company.ifPresent(companies::add);
         }
-        return companies;
-    }
-
-    // TODO refactor
-    private boolean isFeederAllowed(long companyId) {
-        List<Long> ids = new ArrayList<>();
-        List<Company> companies = companyAuthorizations();
-        for (Company c : companies){
-                ids.add(c.getCompanyId());
-        }
-        return ids.contains(companyId);
+        return companies.get(0);
     }
 }

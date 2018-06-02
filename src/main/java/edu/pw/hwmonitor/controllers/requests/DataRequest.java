@@ -4,28 +4,31 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DataRequest {
-    private Long companyId;
     private Integer serial;
-    private LocalDateTime timel;
-    private LocalDateTime timeh;
+    private LocalDateTime begin;
+    private LocalDateTime end;
 
-    // TODO refactor this
-
-    public Long getCompanyId() {return companyId; }
-
-    public void setCompanyId(Long v) {this.companyId=v;}
-
-    public Integer getSerial() {return serial; }
-
-    public void setSerial(Integer v) {this.serial=v;}
-
-    public void setTimel(String v) {
-        this.timel = LocalDateTime.parse(v, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public Integer getSerial() {
+        return serial;
     }
-    public LocalDateTime getTimel(){return timel;}
 
-    public void setTimeh(String v) {
-        this.timeh = LocalDateTime.parse(v, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public LocalDateTime getBegin() {
+        return begin;
     }
-    public LocalDateTime getTimeh(){return timeh;}
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void setSerial(Integer serial) {
+        this.serial = serial;
+    }
+
+    public void setBegin(String begin) {
+        this.begin = LocalDateTime.parse(begin, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setEnd(String end) {
+        this.end = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 }

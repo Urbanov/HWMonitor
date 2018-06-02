@@ -23,9 +23,9 @@ public class AdminController {
 
     @Autowired
     public AdminController(CompanyRepository companyRepository, UserRepository userRepository, RoleRepository roleRepository) {
-        this.companyRepository=companyRepository;
-        this.userRepository=userRepository;
-        this.roleRepository=roleRepository;
+        this.companyRepository = companyRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @PostMapping("/admin/create-company")
@@ -40,7 +40,7 @@ public class AdminController {
 
         Company company = new Company();
         company.setName(companyCreateRequest.getName());
-        company.setRole("ROLE_" + companyCreateRequest.getName().toUpperCase());
+        company.setRole("ROLE_" + companyCreateRequest.getName());
         companyRepository.save(company);
 
         User user = new User();
