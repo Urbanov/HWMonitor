@@ -74,7 +74,7 @@ public class CommonControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"oldPassword\":\"testCorrect\", \"newPassword\":\"test1\"}")
                 .accept(MediaType.APPLICATION_JSON))
-                //then
+        //then
                 .andExpect(status().isNotAcceptable());
     }
 }
