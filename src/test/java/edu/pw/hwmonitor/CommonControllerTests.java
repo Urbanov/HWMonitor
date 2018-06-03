@@ -60,6 +60,7 @@ public class CommonControllerTests {
 
     @Test
     public void givenIncorrectOldPasswordShouldReturnNotAcceptable() throws Exception {
+        
         //given
         User testUser = new User();
         testUser.setPassword("testIncorrect");
