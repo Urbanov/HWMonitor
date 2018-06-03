@@ -42,16 +42,16 @@ public class UserController {
         return new ArrayList<>(feederRepository.findAllByCompanyIdEquals(company.getCompanyId()));
     }
 
-    @PostMapping("/user/feeder-measurments")
+    @PostMapping("/user/feeder-measurements")
     public ResponseEntity<List<ImmutableMap<String, String>>> feederMeasurements(@RequestBody DataRequest dataRequest) {
         Company company = getUserAuthorizations();
         Optional<Feeder> optionalFeeder = feederRepository.findTopBySerialEqualsAndCompanyIdEquals(dataRequest.getSerial(), company.getCompanyId());
 
         if (optionalFeeder.isPresent()) {
-            List<Measurement> measurments = measurementRepository.findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeAsc(
+            List<Measurement> measurements = measurementRepository.findAllByFeederIdEqualsAndTimeIsGreaterThanAndTimeIsLessThanOrderByTimeAsc(
                 optionalFeeder.get().getId(), dataRequest.getBegin(), dataRequest.getEnd()
             );
-            return new ResponseEntity<>(measurments.stream()
+            return new ResponseEntity<>(measurements.stream()
                 .map(measurment -> ImmutableMap.of(
                     "serial", optionalFeeder.get().getSerial().toString(),
                     "timestamp", measurment.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),

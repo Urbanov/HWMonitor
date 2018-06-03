@@ -80,20 +80,20 @@ function updateFeederList() {
             $("#feederList").append($("<button/>", {
                 text: "#" + feeder.serial + ": " + feeder.description,
                 class: "btn btn-block btn-outline-dark text-left",
-                click: () => getMeasurments(feeder.serial)
+                click: () => getMeasurements(feeder.serial)
             }));
         });
     });
 }
 
-function getMeasurments(serial) {
+function getMeasurements(serial) {
     $("#feederList").find(".active").removeClass("active");
     $(event.currentTarget).addClass("active");
 
     $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: "/user/feeder-measurments",
+        url: "/user/feeder-measurements",
         data: JSON.stringify({
             serial: serial,
             begin: moment($("#datetimepicker").datetimepicker("viewDate")).format("YYYY-MM-DD HH:mm:ss"),
@@ -102,13 +102,13 @@ function getMeasurments(serial) {
         success: response => {
             if (response.length > 0) {
                 $("#placeholder").fadeOut(150, () => {
-                    $("#measurments").fadeIn(150);
-                    showMeasurmentsAsChart(response);
-                    showMeasurmentsAsList(response);
+                    $("#measurements").fadeIn(150);
+                    showMeasurementsAsChart(response);
+                    showMeasurementsAsList(response);
                 });
             }
             else {
-                $("#measurments").fadeOut(150, () => {
+                $("#measurements").fadeOut(150, () => {
                     $("#placeholder").fadeIn(150);
                 });
             }
@@ -116,12 +116,12 @@ function getMeasurments(serial) {
     });
 }
 
-function showMeasurmentsAsChart(data) {
+function showMeasurementsAsChart(data) {
     chartHandler.data.datasets[0].data = data.map(elem => elem.value);
     chartHandler.data.labels = data.map(elem => elem.timestamp);
     chartHandler.update();
 }
 
-function showMeasurmentsAsList(data) {
+function showMeasurementsAsList(data) {
     $("#table").bootstrapTable("load", data);
 }
