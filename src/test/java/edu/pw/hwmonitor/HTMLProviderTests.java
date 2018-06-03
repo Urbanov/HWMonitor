@@ -36,18 +36,6 @@ public class HTMLProviderTests {
     @Test
     public void testRootMapping() throws Exception {
         mockMvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void testIndexMapping() throws Exception {
-        mockMvc.perform(get("/index"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testUserIndexMapping() throws Exception {
-        mockMvc.perform(get("/user/index"))
                 .andExpect(status().isOk());
     }
 
@@ -58,8 +46,38 @@ public class HTMLProviderTests {
     }
 
     @Test
+    public void testUserDataMapping() throws Exception {
+        mockMvc.perform(get("/user/data"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUserSourcesMapping() throws Exception {
+        mockMvc.perform(get("/user/sources"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUserSettingsMapping() throws Exception {
+        mockMvc.perform(get("/user/settings"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAdminCompaniesMapping() throws Exception {
+        mockMvc.perform(get("/admin/companies"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAdminSettingMapping() throws Exception {
+        mockMvc.perform(get("/admin/settings"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void test403Mapping() throws Exception {
-        mockMvc.perform(get("/accessDenied"))
+        mockMvc.perform(get("/access-denied"))
                 .andExpect(status().isOk());
     }
 
