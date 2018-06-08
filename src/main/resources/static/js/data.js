@@ -1,4 +1,5 @@
 let chartHandler;
+let lastSerial = null;
 
 $(document).ready(() => {
     updateFeederList();
@@ -33,12 +34,17 @@ $(document).ready(() => {
         }
     });
 
-    $('#datetimepicker').datetimepicker({
+    $("#datetimepicker").datetimepicker({
         format: "YYYY-MM-DD HH:mm:ss",
         inline: true,
-        date: moment(moment(Date.now()).subtract(1, 'days')),
-        sideBySide: false,
-        locale: moment.locale('de')
+        date: moment(moment(Date.now()).subtract(1, "days")),
+        sideBySide: false
+    });
+
+    $("#datetimepicker").on("change.datetimepicker", () => {
+        if (lastSerial !== null) {
+            getMeasurements(lastSerial);
+        }
     });
 
     chartHandler = new Chart($("#chart"), {
@@ -87,8 +93,12 @@ function updateFeederList() {
 }
 
 function getMeasurements(serial) {
-    $("#feederList").find(".active").removeClass("active");
-    $(event.currentTarget).addClass("active");
+    lastSerial = serial;
+
+    if ($(event.currentTarget).is("button")) {
+        $("#feederList").find(".active").removeClass("active");
+        $(event.currentTarget).addClass("active");
+    }
 
     $.ajax({
         type: "POST",
